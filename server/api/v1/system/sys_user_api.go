@@ -8,5 +8,6 @@ import (
 type SystemUserApi struct{}
 
 func (s *SystemUserApi) CreateUserApi(c *gin.Context) {
+
 	response.OkWithMessage("请求成功", c)
 }

@@ -9,7 +9,7 @@ type SysUser struct {
 	global.PRO_MODEL           //通用属性
 	UUID             uuid.UUID `json:"uuid" gorm:"comment:用户UUID"`
 	Username         string    `json:"userName" gorm:"comment:用户登陆名"`
-	Password         string    `json:"-" gorm:"comment:用户密码"`
+	Password         string    `json:"password" gorm:"comment:用户密码"`
 	NickName         string    `json:"nickName" gorm:"default:系统用户;comment:用户昵称"`
 	AuthorityId      uint      `json:"authorityId" gorm:"default:888;comment:用户角色ID"`
 	Phone            string    `json:"phone" gorm:"comment:用户手机号"`

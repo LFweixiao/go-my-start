@@ -12,12 +12,14 @@ import (
 
 type SystemUserApi struct{}
 
+// CreateUserApi 注册新用户
 func (s *SystemUserApi) CreateUserApi(c *gin.Context) {
 
 	var use system.SysUser
 	err := c.ShouldBindJSON(&use)
 	if err != nil {
 		response.FailWithMessage(err.Error(), c)
+		return
 	}
 	proModel := global.PRO_MODEL{
 		ProvinceCode: use.ProvinceCode,
@@ -39,4 +41,35 @@ func (s *SystemUserApi) CreateUserApi(c *gin.Context) {
 		response.FailWithDetailed(systemRes.SysUserResponse{User: u}, "注册失败", c)
 	}
 	response.OkWithDetailed(systemRes.SysUserResponse{User: u}, "请求成功", c)
+}
+
+// LoginUserApi 用户登陆
+func (s *SystemUserApi) LoginUserApi(c *gin.Context) {
+	var use system.SysUser
+	err := c.ShouldBindJSON(&use)
+	if err != nil {
+		response.FailWithMessage(err.Error(), c)
+		return
+	}
+
+	queryVO := &system.SysUser{
+		UUID:     use.UUID,
+		Password: use.Password,
+	}
+	//这里可以加验证码之类的
+
+	userRep, err := userServer.Login(queryVO)
+
+	if err != nil {
+		global.PRO_LOG.Error("登陆失败！用户名不存在或密码错误", zap.Error(err))
+		response.FailWithMessage("用户不存在或密码错误！", c)
+		return
+	}
+	if userRep.Enable != 1 {
+		global.PRO_LOG.Error("登陆失败！用户被冻结", zap.Error(err))
+		response.FailWithMessage("用户禁止登陆！", c)
+	}
+	// TODO Token
+	return
+
 }

@@ -12,6 +12,7 @@ func (u *UserApiRouter) InitUserApiRouter(Router *gin.RouterGroup) {
 	userRouerApi := v1.ApiGroupApp.System.SystemUserApi
 
 	{
-		userRouter.POST("add", userRouerApi.CreateUserApi) //创建用户
+		userRouter.POST("add", userRouerApi.CreateUserApi)  //创建用户
+		userRouter.POST("login", userRouerApi.LoginUserApi) //用户登陆
 	}
 }

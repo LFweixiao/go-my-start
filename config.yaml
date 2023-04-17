@@ -2,7 +2,7 @@
 mysql:
   path: "127.0.0.1"
   port: "3306"
-  config: ""
+  config: "parseTime=true&loc=Local"  # 一定要设置时区
   db-name: "go_game"
   username: "root"
   password: "12345678"

@@ -14,6 +14,7 @@ func main() {
 	global.PRO_DB = initialize.Gorm()
 
 	//初始化 log 日志
+	global.PRO_LOG = core.Zap() // 初始化zap日志库
 
 	if global.PRO_DB != nil {
 		initialize.RegisterTables() //初始化表

@@ -21,3 +21,18 @@ zap:
   encode-level: LowercaseColorLevelEncoder
   stacktrace-key: stacktrace
   log-in-console: true
+
+# redis configuration
+redis:
+  db: 0
+  addr: 127.0.0.1:6379
+  password: ""
+
+# system configuration
+system:
+  addr: 8888
+  db-type: mysql
+  use-redis: true # 使用redis
+  use-multipoint: false
+  #  路由全局前缀
+  router-prefix: ""

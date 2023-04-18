@@ -10,6 +10,7 @@
     >   + mysql
 > + zap： 日志
 > + viper:  读取配置文件
+> + go-redis redis 链接
 
 # 目录
 

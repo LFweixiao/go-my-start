@@ -1,6 +1,7 @@
 package global
 
 import (
+	"github.com/go-redis/redis/v8"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
 	"gorm.io/gorm"
@@ -14,6 +15,7 @@ var (
 	PRO_VIPER  *viper.Viper
 	PRO_CONFIG config.Server
 	PRO_LOG    *zap.Logger
+	PRO_REDIS  *redis.Client
 )
 
 /*// GetGlobalDBByDBName 通过名称获取db list中的db

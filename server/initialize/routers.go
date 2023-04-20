@@ -12,12 +12,16 @@ func Routers() *gin.Engine {
 	systemRouter := router.RouterGroupApp.System
 	//exampleRouter := router.RouterGroupApp.Example
 
+	//文件传入大小
+	Router.MaxMultipartMemory = 8 << 20 // 8MiB
+
 	// swagger 再此配置
 
 	//前置路由
 	PrivateGroup := Router.Group("/lf")
 	{
 		systemRouter.InitUserApiRouter(PrivateGroup) // 注册用户api
+		systemRouter.InitFileApiRouter(PrivateGroup) // 注册文件api
 	}
 
 	return Router

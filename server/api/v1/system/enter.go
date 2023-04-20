@@ -6,8 +6,10 @@ import (
 
 type ApiGroup struct {
 	SystemUserApi
+	SystemFileApi
 }
 
 var (
 	userServer = server.ServerGroupApp.SystemServiceGroup.UserServer
+	fileServer = server.ServerGroupApp.SystemServiceGroup.FileServer
 )

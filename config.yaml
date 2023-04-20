@@ -32,7 +32,7 @@ redis:
 system:
   addr: 8888
   db-type: mysql
-  use-redis: true # 使用redis
+  use-redis: false # 使用redis
   use-multipoint: false
   #  路由全局前缀
   router-prefix: ""

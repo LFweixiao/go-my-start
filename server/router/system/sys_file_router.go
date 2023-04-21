@@ -31,7 +31,8 @@ func (f *FileApiRouter) InitFileApiRouter(Router *gin.RouterGroup) {
 	global.PRO_CONFIG.System.ProjectPath = root + "/"
 
 	{
-		fileRouter.POST("uploadLocal", fileRouterApi.UploadLocal) // 文件上传本地
+		fileRouter.POST("uploadLocal", fileRouterApi.UploadLocal)         // 文件上传本地
+		fileRouter.POST("removeLoaclFile", fileRouterApi.RemoveLocalFile) //删除本地文件
 	}
 
 }

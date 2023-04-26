@@ -42,3 +42,9 @@ func (s *SystemFileApi) RemoveLocalFile(c *gin.Context) {
 	}
 	response.Ok(c)
 }
+
+// DownloadZip 下载zip打包 本地已有的所有文件
+// https://www.runoob.com/http/http-content-type.html 响应头设置
+func (s *SystemFileApi) DownloadZip(c *gin.Context) {
+
+}

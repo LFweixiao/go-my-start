@@ -33,6 +33,7 @@ func (f *FileApiRouter) InitFileApiRouter(Router *gin.RouterGroup) {
 	{
 		fileRouter.POST("uploadLocal", fileRouterApi.UploadLocal)         // 文件上传本地
 		fileRouter.POST("removeLoaclFile", fileRouterApi.RemoveLocalFile) //删除本地文件
+		fileRouter.POST("dwonloadZip", fileRouterApi.DownloadZip)         // 打包本地已有文件
 	}
 
 }

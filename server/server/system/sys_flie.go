@@ -5,6 +5,7 @@ import (
 	"errors"
 	"github.com/gin-gonic/gin"
 	uuid "github.com/satori/go.uuid"
+	"io"
 	"io/ioutil"
 	"lf_web_gin/server/global"
 	"lf_web_gin/server/model"
@@ -58,6 +59,7 @@ func (f *FileServer) RemoveLocalFile(file *model.SysFile, c *gin.Context) (*mode
 // DownloadZip 下载Zip文件
 // 下载指定路径文件，并且会在本地生产 zip包
 // TODO ZIP文件怎么通过gin 传回前端
+// TODO zip的目录层级不对
 func (f *FileServer) DownloadZip(c *gin.Context) error {
 
 	// 这里用的绝对路径 读取到本地文件到流
@@ -78,24 +80,69 @@ func (f *FileServer) DownloadZip(c *gin.Context) error {
 	zipWriter := zip.NewWriter(localZip)
 	defer zipWriter.Close()
 
-	// 读取本地文件 写入zip
+	// 读取目录中的文件打包
 	for _, file := range dirs {
-		// zip包中创建同名文件
-		readFile, err := zipWriter.Create(file.Name())
-		fileBytes, err := ioutil.ReadFile(packPath + file.Name())
-		if err != nil {
-			return err
-		}
-		// 写入文件内容
-		_, err = readFile.Write(fileBytes)
-		if err != nil {
-			return err
-		}
+		compress(file, packPath, zipWriter)
 	}
 
 	// 设置响应头
 	c.Header("Content-Dispostition", "attachment;filename="+fileName+".zip") // 文件名
 	c.Header("Content-Type", "application/zip")                              // 文件传输类型 .zip
 	//c.Writer.Write()
+	return nil
+}
+
+// compres 根据文件 是dir 还是文件来 判断压缩
+// file 传入文件
+// dirPath 当前目录路径
+// zzip zip读流
+func compress(file os.FileInfo, dirPath string, zzip *zip.Writer) error {
+
+	// 当前文件是目录时
+	if file.IsDir() {
+		// 拼接目录
+		dirPathtwo := dirPath + file.Name() + "/"
+		dir, err := ioutil.ReadDir(dirPathtwo)
+		if err != nil {
+			return err
+		}
+		// 读取目录下的文件
+		for _, fi := range dir {
+			f, err := os.Open(dirPathtwo + fi.Name())
+			if err != nil {
+				return err
+			}
+			defer f.Close()
+			info, err := f.Stat()
+			if err != nil {
+				return err
+			}
+			err = compress(info, dirPathtwo, zzip)
+			if err != nil {
+				return err
+			}
+		}
+	} else {
+		// 创建一个文 头部
+		header, err := zip.FileInfoHeader(file)
+		if err != nil {
+			return err
+		}
+		header.Name = dirPath + header.Name
+
+		writer, err := zzip.CreateHeader(header)
+		if err != nil {
+			return err
+		}
+		f, err := os.Open(header.Name)
+		if err != nil {
+			return err
+		}
+		_, err = io.Copy(writer, f)
+		defer f.Close()
+		if err != nil {
+			return err
+		}
+	}
 	return nil
 }

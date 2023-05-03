@@ -60,6 +60,7 @@ func (f *FileServer) RemoveLocalFile(file *model.SysFile, c *gin.Context) (*mode
 // 下载指定路径文件，并且会在本地生产 zip包
 // TODO ZIP文件怎么通过gin 传回前端
 // TODO zip的目录层级不对
+// TODO 删除本地额 zip
 func (f *FileServer) DownloadZip(c *gin.Context) error {
 
 	// 这里用的绝对路径 读取到本地文件到流
@@ -69,7 +70,7 @@ func (f *FileServer) DownloadZip(c *gin.Context) error {
 		return err
 	}
 
-	fileName := "打包文件"
+	fileName := "打包文件2"
 	// 创建zip 打包文件
 	localZip, err := os.Create(packPath + fileName + ".zip")
 	if err != nil {
@@ -82,7 +83,10 @@ func (f *FileServer) DownloadZip(c *gin.Context) error {
 
 	// 读取目录中的文件打包
 	for _, file := range dirs {
-		compress(file, packPath, zipWriter)
+		err := compress(file, packPath, zipWriter, packPath)
+		if err != nil {
+			return err
+		}
 	}
 
 	// 设置响应头
@@ -96,7 +100,8 @@ func (f *FileServer) DownloadZip(c *gin.Context) error {
 // file 传入文件
 // dirPath 当前目录路径
 // zzip zip读流
-func compress(file os.FileInfo, dirPath string, zzip *zip.Writer) error {
+// zipPath 打包目录的路径
+func compress(file os.FileInfo, dirPath string, zzip *zip.Writer, zipPath string) error {
 
 	// 当前文件是目录时
 	if file.IsDir() {
@@ -117,7 +122,7 @@ func compress(file os.FileInfo, dirPath string, zzip *zip.Writer) error {
 			if err != nil {
 				return err
 			}
-			err = compress(info, dirPathtwo, zzip)
+			err = compress(info, dirPathtwo, zzip, zipPath)
 			if err != nil {
 				return err
 			}
@@ -128,13 +133,18 @@ func compress(file os.FileInfo, dirPath string, zzip *zip.Writer) error {
 		if err != nil {
 			return err
 		}
+		// 绝对路径
 		header.Name = dirPath + header.Name
 
-		writer, err := zzip.CreateHeader(header)
+		// 打开完整路径
+		f, err := os.Open(header.Name)
 		if err != nil {
 			return err
 		}
-		f, err := os.Open(header.Name)
+		// 路径改为打包目录的相对路径
+		header.Name = header.Name[len(zipPath):]
+
+		writer, err := zzip.CreateHeader(header) //这里创建文件时注意不要用完整路径 zip中会生产完整路径的目录
 		if err != nil {
 			return err
 		}

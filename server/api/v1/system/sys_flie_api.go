@@ -11,6 +11,13 @@ import (
 type SystemFileApi struct{}
 
 // uploadLocal 文件上传本地目录
+// @Tags     SystemFileApi
+// @Summary  文件保存到本地
+// @accept    multipart/form-data
+// @Produce   application/json
+// @Param    file  formData  file
+// @Success  200   {object}  response.Response{data=systemRes.LoginResponse,msg=string}  "返回包括用户信息,token,过期时间"
+// @Router   /systemFileApi/uploadLocal [post]
 func (s *SystemFileApi) UploadLocal(c *gin.Context) {
 
 	// 获取文件

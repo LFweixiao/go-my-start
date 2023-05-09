@@ -70,6 +70,12 @@ func (s *SystemUserApi) LoginUserApi(c *gin.Context) {
 		response.FailWithMessage("用户禁止登陆！", c)
 	}
 	// TODO Token
+
 	return
+
+}
+
+// TokenNext 登陆后添加jwt
+func (s *SystemUserApi) TokenNext(c *gin.Context, user system.SysUser) {
 
 }

@@ -36,3 +36,9 @@ system:
   use-multipoint: false
   #  路由全局前缀
   router-prefix: ""
+# jwt configuration
+jwt:
+  signing-key: myStart
+  expires-time: 7d
+  buffer-time: 1d
+  issuer: myStart

@@ -6,16 +6,19 @@ import (
 	"go.uber.org/zap"
 	"gorm.io/gorm"
 	"lf_web_gin/server/config"
+
+	"golang.org/x/sync/singleflight"
 )
 
 //全局变量
 
 var (
-	PRO_DB     *gorm.DB
-	PRO_VIPER  *viper.Viper
-	PRO_CONFIG config.Server
-	PRO_LOG    *zap.Logger
-	PRO_REDIS  *redis.Client
+	PRO_DB                  *gorm.DB
+	PRO_VIPER               *viper.Viper
+	PRO_CONFIG              config.Server
+	PRO_LOG                 *zap.Logger
+	PRO_REDIS               *redis.Client
+	GVA_Concurrency_Control = &singleflight.Group{}
 )
 
 /*// GetGlobalDBByDBName 通过名称获取db list中的db

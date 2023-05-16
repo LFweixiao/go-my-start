@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/pkg/errors"
 	uuid "github.com/satori/go.uuid"
+	"go.uber.org/zap"
 	"gorm.io/gorm"
 	"lf_web_gin/server/global"
 	"lf_web_gin/server/model/system"
@@ -44,4 +45,29 @@ func (UserServer *UserServer) Login(vo *system.SysUser) (userRep *system.SysUser
 		//其他操作
 	}
 	return &user, err
+}
+
+// 指定字段查询
+//  SELECT `uuid`,`username` FROM `sys_user` WHERE (`phone` = 1341577 OR `authority_id` = 888) AND `sys_user`.`deleted_time` IS NULL ORDER BY `sys_user`.`id` LIMIT 1
+func (UserServer *UserServer) GormSelect() {
+	var user system.SysUser
+	err := global.PRO_DB.Select("uuid", "username").
+		Where("phone", 1341577).
+		Or("authority_id", 888).Limit(1).First(&user).Error
+	if err != nil {
+		global.PRO_LOG.Error("失败", zap.Error(err))
+	}
+	fmt.Println(user)
+}
+
+// 指定表查询
+// SELECT `username` FROM `sys_user` WHERE `phone` = 1341577 AND `sys_user`.`deleted_time` IS NULL
+func (UserServer *UserServer) GormTable() {
+	var user system.SysUser
+	err := global.PRO_DB.Table("sys_user").Select("username").
+		Find(&user, "phone", 1341577).Limit(1).First(&user).Error
+	if err != nil {
+		global.PRO_LOG.Error("失败", zap.Error(err))
+	}
+	fmt.Println(user)
 }

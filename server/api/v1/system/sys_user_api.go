@@ -79,3 +79,13 @@ func (s *SystemUserApi) LoginUserApi(c *gin.Context) {
 func (s *SystemUserApi) TokenNext(c *gin.Context, user system.SysUser) {
 
 }
+
+// 指定字段查询
+func (s *SystemUserApi) GormSelectApi(c *gin.Context) {
+	userServer.GormSelect()
+}
+
+// 指定表查询
+func (s *SystemUserApi) GormTableApi(c *gin.Context) {
+	userServer.GormTable()
+}

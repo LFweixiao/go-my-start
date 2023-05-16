@@ -14,5 +14,12 @@ func (u *UserApiRouter) InitUserApiRouter(Router *gin.RouterGroup) {
 	{
 		userRouter.POST("add", userRouerApi.CreateUserApi)  //创建用户
 		userRouter.POST("login", userRouerApi.LoginUserApi) //用户登陆
+
+	}
+	gormRouter := Router.Group("Gorm")
+	{
+		gormRouter.GET("select", userRouerApi.GormSelectApi)
+		gormRouter.GET("table", userRouerApi.GormTableApi)
+
 	}
 }
